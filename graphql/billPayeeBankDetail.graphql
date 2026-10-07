@@ -1,0 +1,22 @@
+type BillPayeeBankDetail {
+    id:ID!,
+    bill_payee_setting_id: Int!
+    bank_id: Int!
+    payee_account_number: String!
+    payee_account_name: String!
+    payee_account_name_th: String
+    created_at: DateTime
+    updated_at: DateTime
+    bill_payee_setting: BillPayeeSetting @belongsTo
+    bank: Bank @belongsTo
+}
+
+extend type Query {
+    billPayeeBank(
+        id: Int @eq
+    ): BillPayeeBankDetail @find
+
+    billPayeeBanks(
+        hasBillPayeeSetting: _ @whereHasConditions(columns: ["bill_payee_setting", "residence_id"])
+    ): [BillPayeeBankDetail] @all
+}

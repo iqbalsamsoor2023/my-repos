@@ -1,0 +1,60 @@
+type Parcel {
+    id: ID!
+    unit_id: Int!
+    courier_id: Int!
+    receiver_id: Int
+    receiver_name: String
+    pickup_person_name: String
+    pickup_person_contact_no: String
+    qr_code: String
+    qr_code_url: String
+    parcel_generated_no: String
+    tracking_no: String
+    description: String
+    status: Int!
+    pickup_type:Int
+    pickup_type_name:String
+    pickup_time: DateTime
+    image_url: String
+    signature_image_url: String
+    created_by_mmb_user_id: Int
+    updated_by_mmb_user_id: Int
+    created_by_sgoc_user_id: Int
+    updated_by_sgoc_user_id: Int
+    created_at: DateTime
+    updated_at: DateTime
+    unit: Unit @belongsTo
+    courier: CompaniesLogo @belongsTo
+    receiver: User @belongsTo
+}
+
+extend type Query {
+    parcel (
+        id: Int @eq
+        qr_code: String @eq
+    ): Parcel @find
+
+    paginatedParcels(
+        page: Int
+        qr_code: String @eq
+        unit_id: Int @eq
+        status: Int @eq
+        tracking_no: String @where(operator: "like")
+        receiver_name: String @where(operator: "like")
+        parcel_generated_no: String @where(operator: "like")
+        hasUnit: _ @whereHasConditions(columns: ["unit", "unit_number", "name", "residence_id", "sgoc_company_id", "id"])
+        hasCourier: _ @whereHasConditions(columns: ["companiesLogo", "name"])
+        created_at: DateRange @whereBetween
+        orderBy: [OrderByClause!] @orderBy
+        where: _ @whereConditions(columns: ["parcel", "receiver_name"])
+    ): [Parcel!]! @paginate(type: PAGINATOR, defaultCount: 10)
+
+    paginatedNotMyParcels(
+        page: Int
+        status: Int @eq
+        hasCourier: _ @whereHasConditions(columns: ["companiesLogo", "name"])
+        hasUnit: _ @whereHasConditions(columns: ["unit", "unit_number", "name", "residence_id", "sgoc_company_id", "property_management_user_id"])
+        created_at: DateRange @whereBetween
+        orderBy: [OrderByClause!] @orderBy
+    ): [Parcel!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

@@ -1,0 +1,13 @@
+type Bank {
+    id:ID!,
+    name: String!
+    name_th: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    Bank(
+        id: Int @eq
+    ): Bank @find
+}

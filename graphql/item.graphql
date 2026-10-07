@@ -1,0 +1,19 @@
+type Item {
+    id:ID!
+    invoice_id: Int!
+    name: String!
+    quantity: Int!
+    price: String!
+    status: Int
+    created_at: DateTime
+    updated_at: DateTime
+    invoice: Invoice @belongsTo
+    histories: [ModelHistory] @morphMany
+}
+
+extend type Query {
+    items(
+        invoice_id: Int @eq
+        status: Int @eq
+    ): [Item] @all
+}

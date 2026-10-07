@@ -1,0 +1,18 @@
+type VisitorRemark {
+    id: ID!
+    residence_id: Int!
+    remark: String!
+    created_at: DateTime
+    updated_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    visitorRemark(
+        id:ID! @eq
+    ): VisitorRemark @find
+
+    visitorRemarks (
+        residence_id: Int @eq
+    ): [VisitorRemark] @all (paginate:10)
+}

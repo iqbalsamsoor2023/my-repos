@@ -1,0 +1,23 @@
+type BillPayeeSetting {
+    id:ID!,
+    residence_id: Int!
+    payee_name: String!
+    payee_name_th: String
+    payee_email: String
+    payee_phone_no: String
+    payee_address: String
+    payee_address_th: String
+    remark: String
+    remark_th: String
+    created_at: DateTime
+    updated_at: DateTime
+    residence: Residence @belongsTo
+    accounts: [BillPayeeBankDetail] @hasMany
+}
+
+extend type Query {
+    billPayeeSetting(
+        id: Int @eq
+        residence_id: Int @eq
+    ): BillPayeeSetting @find
+}

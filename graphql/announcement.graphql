@@ -1,0 +1,36 @@
+type Announcement {
+    id:ID!
+    residence_id: Int!
+    title: String!
+    description: String!
+    is_active: Int!
+    created_by: Int!
+    updated_by: Int
+    image_url: String
+    document_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    createdBy: User @belongsTo
+    updatedBy: User @belongsTo
+    modelHasRole: ModelHasRole @belongsTo
+}
+
+extend type Query {
+    announcements(
+        residence_id: Int @eq
+    ): [Announcement] @all
+
+    paginatedAnnouncements(
+        page: Int
+        residence_id: Int @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Announcement] @paginate(type: PAGINATOR, defaultCount: 10)
+
+    listAnnouncementsRoleResidence(
+        residence_id: Int @eq
+        created_by: Int @eq
+        orderBy: [OrderByClause!] @orderBy
+        hasModelHasRole: _ @whereHasConditions(columns: ["role_id"])
+    ): [Announcement!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

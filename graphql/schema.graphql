@@ -1,0 +1,62 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+#import activationModule.graphql
+#import amenity.graphql
+#import announcement.graphql
+#import appVersion.graphql
+#import bank.graphql
+#import billPayeeBankDetail.graphql
+#import billPayeeSetting.graphql
+#import blacklistedVisitor.graphql
+#import brand.graphql
+#import calculation.graphql
+#import comment.graphql
+#import company.graphql
+#import country.graphql
+#import companiesLogo.graphql
+#import districtEmergencyContact.graphql
+#import emergencyContact.graphql
+#import event.graphql
+#import eventRsvp.graphql
+#import healthQuestionnaireAnswer.graphql
+#import healthQuestionnaire.graphql
+#import parcel.graphql
+#import parking.graphql
+#import payer.graphql
+#import payment.graphql
+#import pet.graphql
+#import preregisterVisitor.graphql
+#import item.graphql
+#import modelHistory.graphql
+#import notification.graphql
+#import residence.graphql
+#import residenceFeature.graphql
+#import otherAmenity.graphql
+#import role.graphql
+#import sgocCompany.graphql
+#import sgocUser.graphql
+#import sosManagement.graphql
+#import thailandDistrict.graphql
+#import thailandProvince.graphql
+#import thailandSubDistrict.graphql
+#import transaction.graphql
+#import unit.graphql
+#import unitUser.graphql
+#import user.graphql
+#import userHealth.graphql
+#import userTutorial.graphql
+#import vehicle.graphql
+#import vehicleModel.graphql
+#import visitingArrangement.graphql
+#import visitor.graphql
+#import visitorCard.graphql
+#import visitorLog.graphql
+#import visitorParking.graphql
+#import visitorPurpose.graphql
+#import visitorRemark.graphql
+#import visitorSetting.graphql
+type Query

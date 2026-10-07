@@ -1,0 +1,30 @@
+type Calculation {
+    id: ID!
+    parking_id: Int!
+    vehicle_type: Int!
+    is_stamp: Int!
+    free_parking_minutes: String!
+    rate_per_hour: String!
+    chartered_duration: String!
+    chartered_price: String!
+    penalty: String!
+    parking: Parking @belongsTo
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    calculation(
+        id: ID @eq
+        parking_id: Int @eq
+        vehicle_type: Int @eq
+        is_stamp: Int @eq
+    ): Calculation @find
+
+    calculations(
+        id: Int @eq
+        parking_id: Int @eq
+        vehicle_type: Int @eq
+        is_stamp: Int @eq
+    ): [Calculation] @all(defaultCount:10)
+}

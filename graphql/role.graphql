@@ -1,0 +1,11 @@
+type Role {
+    id: ID!
+    name: String
+}
+
+extend type Query {
+    roles(
+        id: ID
+        name: String
+    ): [Role!]! @all(defaultCount: 10)
+}

@@ -1,0 +1,30 @@
+type EventRsvp {
+    id: ID
+    event_id: Int
+    event: Event @belongsTo
+    user_id: Int
+    user: User @belongsTo
+    is_going: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    eventRsvp(
+        id: ID @eq
+        event_id: Int @eq
+        user_id: Int @eq
+    ): EventRsvp @find
+
+    eventRsvps(
+        event_id: Int @eq
+        user_id: Int @eq
+        is_going: Int @eq
+    ): [EventRsvp] @all
+
+    updateIsGoingEventRsvp(
+        event_id: Int!,
+        user_id: Int!,
+        is_going: String!
+    ): Int! @field(resolver: "UpdateIsGoingEventRsvp")
+}

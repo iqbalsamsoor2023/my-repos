@@ -1,0 +1,20 @@
+type Payer {
+    id:ID!,
+    invoice_id: Int!
+    payer_id: String!
+    created_at: DateTime
+    updated_at: DateTime
+    invoice: Invoice @belongsTo
+    user: User @belongsTo
+}
+
+extend type Query {
+    payer(
+        id: Int @eq
+    ): Payer @find
+
+    payers(
+        id: Int @eq
+        payer_id: Int @eq
+    ): [Payer] @all
+}

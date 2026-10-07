@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Jobs\ImageMigrations;
+
+use App\Models\Unit;
+use App\Services\CloudObjectStorageService;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+
+class CopyBookingFormJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $collection;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($collection)
+    {
+        $this->onQueue('imageQueue');
+        $this->collection = $collection;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        $value = $this->collection;
+
+        $cosClient = CloudObjectStorageService::execute();
+        $mmb1_bucket = Storage::disk('cos2');
+        $mmb2_bucket = Storage::disk('cos');
+
+        $mmb2_unit = Unit::withTrashed()->where('home_id', $value->home_id)
+            ->where('unit_number', $value->unit)
+            ->first();
+
+        $bucket = 'mooban-1258956757'; // Bucket name in the format of BucketName-APPID
+        $result = $cosClient->listObjects([
+            'Bucket' => $bucket,
+            'Prefix' => config('app.path.cos')."/residence_unit/$value->id/booking-form/",
+        ]);
+
+        $images = [];
+        if (isset($result['Contents'])) {
+            foreach ($result['Contents'] as $rt) {
+                $images[] = $rt['Key'];
+            }
+        }
+        foreach ($images as $image) {
+            if ($mmb1_bucket->has($image)) {
+                $file_name = basename($image);
+                $mmb2_image_exist = $mmb2_bucket->exists(config('app.path.cos')."/residence_unit/$mmb2_unit->id/booking-form/$file_name");
+                if (! $mmb2_image_exist) {
+                    $url = $mmb1_bucket->url($image);
+                    $mmb2_unit->addMediaFromUrl($url)->withCustomProperties(['type' => 'booking_form'])->toMediaCollection('booking_form');
+                }
+            }
+        }
+
+        return true;
+    }
+}

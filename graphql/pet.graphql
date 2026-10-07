@@ -1,0 +1,48 @@
+type Pet {
+    id: ID!
+    unit_id: Int!
+    user_id: Int!
+    breed: String!
+    type: String!
+    year: Int!
+    generated_pet_no: String
+    created_by: Int!
+    image_back_url: String
+    image_bottom_url: String
+    image_front_url: String
+    image_left_url: String
+    image_right_url: String
+    image_top_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    pet_age: String
+    unit: Unit @belongsTo
+    user: User @belongsTo
+    createdBy: User @belongsTo
+}
+
+extend type Query {
+    pet (
+        id: Int! @eq
+    ): Pet @find
+
+    pets (
+        id: Int
+        unit_id: Int @eq
+        user_id: Int @eq
+        breed: String  @where(operator: "like")
+        type: String  @where(operator: "like")
+        year: Int @eq
+        generated_pet_no: String @where(operator: "like")
+        created_by: Int @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Pet!]! @all
+
+    paginatedPets(
+        page: Int!
+        type: Int @eq
+        hasUnit: _ @whereHasConditions(columns: ["unit", "name", "unit_number", "sgoc_company_id", "id"])
+        hasUser: _ @whereHasConditions(columns: ["user", "name"])
+    ): [Pet!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

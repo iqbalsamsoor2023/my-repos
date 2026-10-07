@@ -1,0 +1,50 @@
+type Unit {
+    id: ID!
+    residence_id: Int!
+    invitation_code_owner: String
+    invitation_code_tenant: String
+    home_id: String
+    unit_size: String
+    myseevr_link: String
+    property_type: Int
+    unit_number: String!
+    street: String!
+    floor: String
+    block: String
+    status: Int
+    move_in_at: Date
+    booking_form_pdf_url: String
+    house_contract_url: String
+    floor_plan_url: String
+    floor_plan_pdf_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    moobaan: Residence @belongsTo
+    residence: Residence @belongsTo
+    unitUsers: [UnitUser] @hasMany
+}
+
+extend type Query {
+    unit(
+        id: ID @eq
+        residence_id: Int @eq
+        unit_number: String @eq
+    ): Unit @find
+
+    units(
+        residence_id: Int @eq
+        unit_number: String @where(operator: "like")
+        hasUnitUsers: _ @whereHasConditions(columns: ["unitUser", "user_id"])
+    ): [Unit]! @all @cache(maxAge: 180)
+
+    paginatedUnits(
+        page: Int!
+        id: Int @eq
+        residence_id: Int @eq
+        unit_number: String @where(operator: "like")
+        hasUnitUsers: _ @whereHasConditions(columns: ["unitUser", "id",  "user_id", "name"])
+        orderBy: [OrderByClause!] @orderBy
+        where: _ @whereConditions(columns: ["deleted_at"])
+    ): [Unit!]! @paginate(type: PAGINATOR, defaultCount: 10) @cache(maxAge: 180)
+}

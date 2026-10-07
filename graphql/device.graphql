@@ -1,0 +1,21 @@
+type Device {
+    id: ID!
+    user_id: Int!
+    device_id: String!
+    fcm_token: String
+    huawei_token: String
+    package_name: String
+    brand: String!
+    model: String!
+
+    users: [User!] @hasMany
+
+    extend type Query {
+    device(
+      id: ID! @eq
+    ): Device @find
+
+    devices(
+        user_id: Int @eq
+    ): [Device!]! @all(defaultCount: 10)
+}

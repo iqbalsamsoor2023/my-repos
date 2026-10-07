@@ -1,0 +1,35 @@
+type Parking {
+    id: ID!
+    residence_id: Int!
+    type: Int!
+    rate_mode: Int!
+    is_discount_coupon: Int!
+    discount_type: Int!
+    residence: Residence @belongsTo
+    calculations: Calculation @hasMany
+}
+
+type ParkingResponse {
+    duration: String
+    parking_fee_total: String
+}
+
+extend type Query {
+    parking(
+        residence_id: Int!
+        visitor_log_id: Int!
+        vehicle_type: Mixed
+        is_stamp: Mixed
+        is_penalty: Mixed
+        discount_value: Mixed
+        hasCalculations: _ @whereHasConditions(columns: ["calculations", "vehicle_type", "is_stamp"])
+    ): ParkingResponse @field(resolver: "VisitorParkings")
+
+    parkingModel(
+        id: ID @eq
+        residence_id: Int @eq
+    ): Parking @find
+
+    parkings: [Parking!]! @all
+}
+

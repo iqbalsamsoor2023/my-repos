@@ -1,0 +1,24 @@
+type ThailandDistrict {
+    id: ID!
+    code: String!
+    name_in_english: String!
+    name_in_thai: String!
+    province_id: Int!
+    province: ThailandProvince
+    subDistricts: [ThailandSubDistrict]
+}
+
+extend type Query {
+    thailandDistrict(
+        id: ID @eq
+        code: String @eq
+    ): ThailandDistrict @find
+
+    thailandDistricts(
+        id: ID @eq
+        code: String @eq
+        name_in_english: String @where(operator: "like")
+        name_in_thai: String @where(operator: "like")
+        province_id: Int @eq
+    ): [ThailandDistrict]! @all(defaultCount: 10) @cache
+}

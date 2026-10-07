@@ -1,0 +1,25 @@
+type UserTutorial {
+    id: ID!
+    platform: String!
+    module: String!
+    title: String
+    type: Int!
+    tutorial_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+extend type Query {
+    UserTutorial(
+        id: ID @eq
+        platform: String @eq
+        type: Int @eq
+    ): UserTutorial @find
+
+    paginatedUserTutorials(
+        page: Int
+        platform: String @eq
+        type: Int @eq
+    ): [UserTutorial!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

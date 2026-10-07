@@ -1,0 +1,20 @@
+type HealthQuestionnaireAnswer {
+    id: ID!
+    question_id: Int!
+    answer: String
+    answer_th: String
+    created_at: DateTime
+    updated_at: DateTime
+    healthQuestionnaire: HealthQuestionnaire @belongsTo
+}
+
+extend type Query {
+    healthQuestionnaireAnswer(
+        id: ID @eq
+    ): HealthQuestionnaireAnswer @find
+
+    healthQuestionnaireAnswers(
+        answer: String @eq
+        answer_th: String @eq
+    ): [HealthQuestionnaireAnswer]! @all
+}

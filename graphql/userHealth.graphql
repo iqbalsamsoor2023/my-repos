@@ -1,0 +1,19 @@
+type UserHealth {
+    id: ID!
+    user_id: Int!
+    blood_type: String
+    height: String
+    weight: String
+    health_questionnaire_answers: JSON
+    bmi: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    user: User @belongsTo
+}
+
+extend type Query {
+    userHealth(
+        user_id: ID @eq
+    ): UserHealth @first
+}

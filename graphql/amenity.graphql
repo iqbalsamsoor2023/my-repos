@@ -1,0 +1,29 @@
+type Amenity {
+    id: ID!
+    residence_id: Int!
+    amenity_name: String!
+    warranty_period: Int
+    period_type: String
+    supplier: String
+    is_out_warranty: Int
+    remark: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    residence: Residence @belongsTo
+    otherAmenity: OtherAmenity @hasOne
+}
+
+extend type Query {
+    amenities(
+        residence_id: ID! @eq
+    ): Amenity @find
+
+    paginatedAmenities(
+        page: Int!
+        warranty_period: Int @eq
+        residence_id: Int @eq
+        amenity_name: String @neq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Amenity!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

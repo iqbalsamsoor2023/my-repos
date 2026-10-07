@@ -1,0 +1,25 @@
+type ModelHistory {
+    id:ID!,
+    user_id: Int!
+    event: String!
+    modelable_type: String!
+    modelable_id: Int!
+    old_values: JSON
+    new_values: JSON
+    created_at: DateTime
+    updated_at: DateTime
+    invoice: Invoice @belongsTo
+    user: User @belongsTo
+    changes: JSON
+}
+
+extend type Query {
+    modelHistory(
+        id: Int @eq
+    ): ModelHistory @find
+
+    model_histories(
+        id: Int @eq
+        modelable_id: Int @eq
+    ): [ModelHistory] @all
+}

@@ -1,0 +1,73 @@
+type Residence {
+    id: ID!
+    name: String!
+    name_th: String
+    mooban_type: String
+    pmoc_type: Int
+    completion_year: String!
+    latitude: String!
+    longitude: String!
+    developer_id: Int!
+    developer_user_id: Int
+    property_management_type: Int
+    property_management_id: Int
+    property_management_user_id: Int
+    subdistrict_id: Int!
+    receptionist_user_id: Int
+    accountant_user_id: Int
+    sgoc_company_id: Int
+    sgoc_residence_guard_user_id: Int
+    residence_activation_status_id: Int
+    internet_provider_id: JSON
+    guard_house_entry_number: Int
+    guard_house_lane_type: Int
+    insurance_company_id: Int
+    subscription_start_date: Date!
+    subscription_end_date: Date!
+    support_ticket_status: Int
+    appointment_datetime_status: Int
+    verify_private_claim: Int
+    verify_public_claim: Int
+    image_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    units: [Unit] @hasMany
+    subdistrict: ThailandSubDistrict! @belongsTo
+    developer: Company @belongsTo
+    developerUser: User @belongsTo
+    propertyManagement: Company @belongsTo
+    propertyManagementUser: User @belongsTo
+    receptionist: User @belongsTo
+    accountantUser: User @belongsTo
+    InsuranceCompany: Company @belongsTo
+    amenities: [Amenity] @hasMany
+    otherAmenity: OtherAmenity @hasOne
+    visitorSetting: VisitorSetting @hasOne
+    visitorRemarks: [VisitorRemark] @hasMany
+    residenceGuardUser: SgocUser @belongsTo
+    sgocCompany: SgocCompany @belongsTo
+}
+
+extend type Query {
+    residence(
+        id: ID @eq
+        sgoc_company_id: Int @eq
+        sgoc_residence_guard_user_id: Int @eq
+        property_management_user_id: Int @eq
+        where: _ @whereConditions(columns: ["name"])
+    ): Residence @find
+
+    residences(
+        name: String @where(operator: "like")
+        subdistrict_id: Int @eq
+        sgoc_company_id: Int @eq
+    ): [Residence!]! @all(defaultCount: 10)
+
+    paginatedResidences(
+        page: Int!
+        name: String @where(operator: "like")
+        sgoc_company_id: Int @eq
+        where: _ @whereConditions(columns: ["sgoc_company_id"])
+    ): [Residence!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

@@ -1,0 +1,27 @@
+type VisitorCard {
+    id: ID!
+    residence_id: Int!
+    visitor_card_no: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    visitorCard(
+        id:ID @eq
+        visitor_card_no: String @eq
+        residence_id: Int @eq
+    ): VisitorCard @find
+
+    visitorCards (
+        residence_id: Int @eq
+        visitor_card_no: String @eq
+    ): [VisitorCard] @all (paginate:10)
+
+    paginatedVisitorCards(
+        page: Int!
+        hasResidence: _ @whereHasConditions(columns: ["residence", "name", "sgoc_company_id"])
+    ): [VisitorCard!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

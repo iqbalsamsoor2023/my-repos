@@ -1,0 +1,41 @@
+type PreregisterVisitor {
+    id: ID!
+    visitor_id: Int!
+    unit_id: Int!
+    user_id: Int!
+    visitor_code: String!
+    visitor_purpose: String
+    arrival_type: Int
+    vehicle_type: Int
+    vehicle_plate_no: String
+    is_multiple_entry: Int
+    validity_start_date: DateTime
+    validity_end_date: DateTime
+    is_qr_code_expired: Int!
+    qr_code_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    visitor: Visitor @belongsTo
+    unit: Unit @belongsTo
+    user: User @belongsTo
+}
+
+extend type Query {
+    preregisterVisitor(
+        visitor_id:ID @eq
+        visitor_code:String @eq
+    ): PreregisterVisitor @find
+
+    preregisterVisitors(
+        visitor_id: Int @eq
+    ): [PreregisterVisitor] @all (paginate:10)  
+
+    paginatedPreregisterVisitors(
+        visitor_id: Int @eq
+        visitor_code: String @eq
+        unit_id: Int @eq
+        user_id: Int @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [PreregisterVisitor!]! @paginate(type: PAGINATOR, defaultCount: 25)
+}

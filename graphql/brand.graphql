@@ -1,0 +1,33 @@
+type Brand {
+    id:ID!,
+    name: String
+    name_th: String
+    gpl_priority: Int
+    image_url: String
+}
+
+input OrderByClause{
+    column: String
+    order: SortOrder!
+}
+
+enum SortOrder {
+    ASC
+    DESC
+}
+
+extend type Query {
+    brands(
+        where: _ @whereConditions(columns: ["id"])
+    ): [Brand] @all (defaultCount: 10)
+
+    brandsGPL(
+        gpl_priority: String! @where(operator: "!=")
+        orderBy: [OrderByClause!] @orderBy
+    ) :[Brand] @all
+
+    paginatedBrandsGPL(
+        page: Int!
+        gpl_priority: String! @where(operator: "!=")
+    ): [Brand!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

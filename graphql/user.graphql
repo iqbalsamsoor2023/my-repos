@@ -1,0 +1,45 @@
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    gender: String
+    date_of_birth: Date
+    phone_no: String
+    address: String
+    country_id: Int
+    email_verified_at: DateTime
+    id_number: String
+    passport_number: String
+    passport_expiry: Date
+    is_community_head_verified: DateTime
+    profile_image_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    pdpa_agreed_at: DateTime
+    roles: [Role!] @hasMany
+    unitUsers: [UnitUser] @hasMany
+    propertyManagement: Residence @hasOne
+    receptionist: Residence @hasOne
+    supportTicketAssigned: [SupportTicket!] @hasMany
+    supportTicketSubmitted: [SupportTicket!] @hasMany
+    visitingArrangements: [VisitingArrangement] @hasMany
+}
+
+extend type Query {
+    user(
+      id: ID! @eq
+      email: String @where(operator: "like")
+    ): User @find
+
+    users(
+        name: String @where(operator: "like")
+        hasRoles: _ @whereHasConditions(columns: ["roles", "name"])
+    ): [User!]! @all(defaultCount: 10)
+
+    user(
+        id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+        email: String @eq @rules(apply: ["prohibits:id", "required_without:id", "email"])
+        hasRoles: _ @whereHasConditions(columns: ["roles", "name"])
+    ): User @find
+}

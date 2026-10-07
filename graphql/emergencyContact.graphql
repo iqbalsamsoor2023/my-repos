@@ -1,0 +1,25 @@
+
+type EmergencyContact {
+    id: ID
+    department_type: String
+    name: String
+    contact_no: String
+    coverage_mode: String
+    is_active: Int
+    created_at: DateTime
+    updated_at: DateTime
+    districtEmergencyContacts: [DistrictEmergencyContact] @hasMany
+}
+
+extend type Query {
+    emergencyContact(
+        id: ID! @eq
+    ): EmergencyContact @find
+
+    emergencyContacts(
+        name: String @eq
+        department_type: String @eq
+        is_active: Int @eq
+        hasDistrictEmergencyContacts: _ @whereHasConditions(columns: ["districtEmergencyContacts", "thailand_district_id"])
+    ): [EmergencyContact] @field(resolver: "EmergencyContacts")
+}

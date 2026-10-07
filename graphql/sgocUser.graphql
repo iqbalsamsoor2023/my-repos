@@ -1,0 +1,26 @@
+type SgocUser {
+    id: ID!
+    company_id: Int
+    country_id: Int!
+    name: String
+    email: String
+    email_verified_at: DateTime
+    id_number: String
+    phone_no: String
+    address: String
+    date_of_birth: Date
+    gender: String
+    passport_number: String
+    passport_expiry: Date
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    residenceGuard: Residence @hasOne
+}
+
+extend type Query {
+    sgocUser(
+      id: ID! @eq
+      email: String @where(operator: "like")
+    ): SgocUser @find
+}

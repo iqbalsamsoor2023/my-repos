@@ -1,0 +1,27 @@
+type VisitorParking {
+    id: ID!
+    visitor_log_id: Int!
+    calculation_id: Int!
+    discount_value: Int!
+    amount_to_pay: Int!
+    amount_paid: Int!
+    is_penalty: Int!
+    is_stamp: Int!
+    calculation_records: JSON
+    visitorLog: VisitorLog @belongsTo
+    calculations: Calculation @hasMany
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    visitorParking(
+        id: ID @eq
+        visitor_log_id: Int @eq
+    ): VisitorParking @find
+
+    visitorParkings(
+        id: Int @eq
+        visitor_log_id: Int @eq
+    ): [VisitorParking] @all(defaultCount:10)
+}

@@ -1,0 +1,17 @@
+type VehicleModel {
+    id: ID!
+    brand_id: Int!
+    name: String!
+    type: Int!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    brand: Brand @belongsTo
+}
+
+extend type Query {
+    vehicleModels (
+        brand_id: Int @eq
+        type: Int @eq
+    ): [VehicleModel] @all (paginate:10)
+}

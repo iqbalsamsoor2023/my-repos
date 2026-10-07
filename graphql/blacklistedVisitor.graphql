@@ -1,0 +1,27 @@
+type BlacklistedVisitor {
+    id: ID!
+    visitor_id: Int!
+    residence_id: Int!
+    blacklist_remark: String
+    vehicle_plate_no: String
+    image_url: String
+    photo_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    visitor: Visitor @belongsTo
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    blacklistedVisitor (
+        id:ID! @eq
+    ): BlacklistedVisitor @find
+
+    paginatedBlacklistedVisitors (
+        residence_id: Int @eq
+        vehicle_plate_no: Int @eq
+        hasVisitor: _ @whereHasConditions(columns: ["visitor", "name", "id_type", "id_number"])
+        orderBy: [OrderByClause!] @orderBy
+    ): [BlacklistedVisitor] @paginate(type: PAGINATOR, defaultCount: 10)
+}

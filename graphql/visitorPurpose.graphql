@@ -1,0 +1,25 @@
+type VisitorPurpose {
+    id: ID!
+    residence_id: Int!
+    purpose: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    visitorPurpose(
+        id:ID! @eq
+    ): VisitorPurpose @find
+
+    visitorPurposes (
+        residence_id: Int @eq
+    ): [VisitorPurpose] @all
+
+    paginatedVisitorPurposes(
+        page: Int!
+        residence_id: Int @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [VisitorPurpose!]! @paginate(type: PAGINATOR, defaultCount: 25)
+}

@@ -1,0 +1,32 @@
+type Transaction {
+    id:ID!,
+    ref_no: String
+    invoice_id: Int!
+    bill_payee_bank_detail_id: Int
+    payment_id: Int!
+    paid_amount: String!
+    transaction_datetime: DateTime
+    status: Int!
+    payer_name: String!
+    reviewed_by: Int
+    remark: String
+    created_at: DateTime
+    updated_at: DateTime
+    invoice: Invoice @belongsTo
+    bankAccountDetail: BillPayeeBankDetail @belongsTo
+    paymentMethod: Payment @belongsTo
+}
+
+extend type Query {
+    transaction(
+        id: Int @eq
+        status: Int @eq
+        invoice_id: Int @eq
+    ): Transaction @find
+
+    transactions(
+        invoice_id: Int @eq
+        where: _ @whereConditions(columns: ["invoice_id", "status"])
+        hasInvoice: _ @whereHasConditions(columns: ["id", "status"])
+    ): [Transaction] @all
+}

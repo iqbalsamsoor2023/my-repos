@@ -1,0 +1,13 @@
+type DistrictEmergencyContact  {
+    id: ID!
+    emergency_contact_id: Int!
+    thailand_district_id: Int!
+    emergencyContact: EmergencyContact @belongsTo
+    thailandDistrict: ThailandDistrict @belongsTo
+    created_at: Datetime
+    updated_at: Datetime
+}
+
+extend type Query {
+    districtEmergencyContacts: [DistrictEmergencyContact!]! @all(defaultCount: 10)
+}

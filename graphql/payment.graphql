@@ -1,0 +1,11 @@
+type Payment {
+    id:ID!,
+    payment_mode: String!
+    payment_prefix: Int
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    payments: [Payment] @all
+}

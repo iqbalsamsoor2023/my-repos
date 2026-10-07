@@ -1,0 +1,15 @@
+type VisitorSetting {
+    id: ID!
+    residence_id: Int!
+    is_qr_active: Int!
+    pdpa_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    visitorSetting(
+        residence_id:ID! @eq
+    ): VisitorSetting @find
+}

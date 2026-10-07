@@ -1,0 +1,20 @@
+type CompaniesLogo {
+    id:ID!
+    category: String!
+    modes: String!
+    name: String!
+    logo_url: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    companyLogo(
+        category: String @eq
+        name: String @eq
+    ): CompaniesLogo @find
+
+    companiesLogo(
+        category: String @eq
+    ): [CompaniesLogo] @all
+}

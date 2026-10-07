@@ -1,0 +1,35 @@
+type ThailandSubDistrict {
+    id: ID!
+    code: String
+    name_in_english: String
+    name_in_thai: String
+    latitude: String
+    longitude: String
+    district_id: Int
+    district: ThailandDistrict
+    zip_code: String
+    district: ThailandDistrict @belongsTo
+}
+
+extend type Query {
+    thailandSubDistrict(
+        id: ID @eq
+        code: String
+        name_in_english: String
+        name_in_thai: String
+        latitude: String
+        longitude: String
+        district_id: Int
+        zip_code: String
+
+    ): ThailandSubDistrict @find
+
+     thailandSubDistricts(
+        id: ID
+        code: String @eq
+        name_in_english: String @where(operator: "like")
+        name_in_thai: String @where(operator: "like")
+        district_id: Int @eq
+        zip_code: String @eq
+    ): [ThailandSubDistrict]! @all(defaultCount: 10) @cache
+}

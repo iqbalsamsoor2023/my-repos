@@ -1,0 +1,49 @@
+type VisitingArrangement {
+    id: ID!
+    visitor_log_id: Int!
+    residence_id:Int!
+    unit_id:Int
+    user_id:Int
+    estamp_by: Int
+    estamp_by_type: Int
+    stamp_by_name: String
+    status: Int
+    status_name: String
+    feedback_remark: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    visitorLog: VisitorLog @belongsTo
+    residence: Residence @belongsTo
+    unit: Unit @belongsTo
+    user: User @belongsTo
+    estampBy: User @belongsTo
+    visitorRemarks: [VisitorRemark] @hasMany
+}
+
+extend type Query {
+    visitingArrangement(
+        id:ID! @eq
+    ): VisitingArrangement @find
+
+    parkingVisitingArrangement(
+        visitor_log_id: Int @eq
+    ): VisitingArrangement @first
+
+    visitingArrangements(
+        visitor_log_id: Int @eq
+        residence_id: Int @eq
+        unit_id: Int @eq
+        user_id: Int @eq
+    ): [VisitingArrangement] @all
+
+    paginatedVisitingArrangements(
+        page: Int!
+        visitor_log_id: Int @eq
+        residence_id: Int @eq
+        unit_id: Int @eq
+        user_id: Int @eq
+        orderBy: [OrderByClause] @orderBy
+        @orderBy(relations: [{ relation: "visitorLog", columns: ["created_at"] }])
+    ): [VisitingArrangement!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

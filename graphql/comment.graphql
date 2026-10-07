@@ -1,0 +1,35 @@
+type Comment {
+    id: ID!
+    parent_id: Int
+    user_id: Int
+    commentable_type: String!
+    commentable_id: Int!
+    content: String
+    image_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    user: User @belongsTo
+    commentable: Commentable @morphTo
+}
+
+union Commentable = Maintenance
+
+extend type Query {
+    comment(
+        id: ID @eq
+    ): Comment @find
+
+    commentCount(
+        commentable_id: Int @eq
+    ) : Int! @count(model: "Comment")
+
+    comments(
+        user_id: Int @eq
+        commentable_id: Int @eq
+    ): [Comment!]! @all(defaultCount: 10)
+
+    paginatedComments(
+        page: Int!
+        commentable_id: Int @eq
+    ): [Comment!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

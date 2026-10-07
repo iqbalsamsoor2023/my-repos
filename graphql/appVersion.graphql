@@ -1,0 +1,15 @@
+type AppVersion {
+    id:ID!
+    platform: String!
+    application_name: String!
+    package_identifier: String!
+    build_version: String
+    application_version: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+extend type Query {
+    appVersions: [AppVersion] @all
+}

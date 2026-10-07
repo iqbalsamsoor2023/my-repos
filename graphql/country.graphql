@@ -1,0 +1,17 @@
+type Country {
+    id: ID!
+    name: String!
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+}
+
+extend type Query {
+    country(
+        id: ID! @eq
+    ): Country @find
+
+  countries(
+        name: String @where(operator: "like")
+    ): [Country!]! @all(defaultCount: 10)
+}

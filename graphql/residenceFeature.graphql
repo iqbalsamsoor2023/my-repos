@@ -1,0 +1,25 @@
+type ResidenceFeature {
+    id: ID!
+    residence_id: Int!
+    feature_id: Int!
+    feature_name: String!
+    is_active: Int
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    residenceFeature(
+        residence_id: ID! @eq
+        feature_id: ID! @eq
+        feature_name: String @eq
+    ): ResidenceFeature @find
+
+    residenceFeatures(
+        residence_id: ID! @eq
+        feature_id: ID! @eq
+        feature_name: String @eq
+    ): [ResidenceFeature!]! @all(defaultCount: 10)
+}

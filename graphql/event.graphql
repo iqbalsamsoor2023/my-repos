@@ -1,0 +1,44 @@
+type Event {
+    id: ID
+    residence_id: Int
+    residence: Residence @belongsTo
+    title: String
+    description: String
+    start_at: DateTime
+    end_at: DateTime
+    is_active: Int
+    is_cancel: Int
+    image_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    rsvps: [EventRsvp] @hasMany
+    modelHasRole: ModelHasRole @belongsTo
+}
+
+extend type Query {
+    event(
+        id: ID! @eq
+    ): Event @find
+
+    events(
+        residence_id: Int @eq
+        title: String @eq
+        description: String @eq
+        # start_at: Datetime @where(operator: "like")
+        # end_at: DateTime @where(operator: "like")
+        is_active: Int @eq
+        is_cancel: Int @eq
+        hasRsvps: _ @whereHasConditions(columns: ["rsvps", "user_id"])
+        # cerated_at: DateTime @where(operator: "like")
+        # updated_at: DateTime @where(operator: "like")
+        orderBy: [OrderByClause!] @orderBy
+    ): [Event] @all
+
+    paginatedEvents(
+        page: Int
+        residence_id: Int @eq
+        hasRsvps: _ @whereHasConditions(columns: ["rsvps", "user_id"])
+        orderBy: [OrderByClause!] @orderBy
+        hasModelHasRole: _ @whereHasConditions(columns: ["role_id"])
+    ): [Event] @paginate(type: PAGINATOR, defaultCount: 10)
+}

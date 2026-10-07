@@ -1,0 +1,34 @@
+type Visitor {
+    id: ID!
+    name: String!
+    contact_no: String
+    id_type: Int
+    id_number: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    blacklistedVisitor: [BlacklistedVisitor] @hasMany
+    preregisterVisitors: [PreregisterVisitor] @hasMany
+}
+
+type FeedbackType{
+    remember_wrong: String
+    remember_wrong_th: String
+    press_wrong: String
+    press_wrong_th: String
+    impersonation: String
+    impersonation_th: String
+    other: String
+    other_th: String
+}
+
+extend type Query {
+    visitor(
+        id:ID! @eq
+        name: String @eq
+    ): Visitor @find
+
+    visitors: [Visitor] @all (paginate:10)
+
+    feedbackType: FeedbackType @field(resolver: "Feedbacks")
+}

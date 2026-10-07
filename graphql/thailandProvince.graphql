@@ -1,0 +1,31 @@
+type ThailandProvince {
+    id: ID!
+    code: String
+    name_in_english: String
+    name_in_thai: String
+    districts: [ThailandDistrict]
+}
+
+extend type Query {
+    thailandProvince(
+        id: ID @eq
+        code: String
+        name_in_english: String
+        name_in_thai: String
+    ): ThailandProvince @find
+
+    thailandProvinces(
+        id: ID
+        code: String
+        name_in_english: String
+        name_in_thai: String
+    ): [ThailandProvince]! @all(defaultCount: 10) @cache
+
+    paginatedThailandProvinces(
+        id: ID
+        page: Int!
+        code: String
+        name_in_english: String
+        name_in_thai: String
+    ): [ThailandProvince]! @all(defaultCount: 25) @cache
+}

@@ -1,0 +1,47 @@
+type UnitUser {
+    id: ID!
+    unit_id: Int!
+    user_id: Int!
+    is_owner: Int
+    mmb_id: String
+    is_main_owner: Int
+    is_main_tenant: Int
+    relationship: String
+    approval_status: Int
+    has_tenant: Int
+    created_at: DateTime
+    updated_at: DateTime
+    unit: Unit @belongsTo
+    user: User @belongsTo
+}
+
+extend type Query {
+    unitUser(
+        id: ID @eq
+        unit_id: Int @eq
+        user_id: Int @eq
+        is_owner: Int @eq
+    ): UnitUser @find
+
+    unitUsers(
+        user_id: Int @eq
+        unit_id: Int @eq
+        is_owner: Int @eq
+        is_main_owner: Int @eq
+        is_main_tenant: Int @eq
+        relationship: Int @eq
+        approval_status: Int @eq
+        hasUnit: _ @whereHasConditions(columns: ["unit", "unit_number", "district_id"])
+        hasUser: _ @whereHasConditions(columns: ["user", "name", "email", "phone_no"])
+        orderBy: [OrderByClause!] @orderBy
+    ): [UnitUser]!  @all
+
+    paginatedUnitUsers(
+        page: Int
+        is_owner: Int @eq
+        mmb_id: String @eq
+        where: _ @whereConditions(columns: ["residence_id", "unit_number", "name", "email"])
+        hasUnit: _ @whereHasConditions(columns: ["unit", "unit_number", "name", "residence_id", "sgoc_company_id", "id"])
+        hasUser: _ @whereHasConditions(columns: ["user", "name", "email", "phone_no"])
+    ): [UnitUser!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

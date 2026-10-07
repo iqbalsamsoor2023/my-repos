@@ -1,0 +1,26 @@
+type ActivationModule {
+    id: ID!
+    residence_id: Int!
+    module: String!
+    module_type: Int!
+    module_type_name:String
+    is_active: Int
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    activationModule(
+        residence_id: ID! @eq
+        module: String @eq
+        module_type: Int! @eq
+    ): ActivationModule @find
+
+    activationModules(
+        residence_id: Int @eq
+        module: String @eq
+        module_type: Int @eq
+    ): [ActivationModule!]! @all(defaultCount: 10)
+}

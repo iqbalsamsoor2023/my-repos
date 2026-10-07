@@ -1,0 +1,53 @@
+type Vehicle {
+    id: ID!
+    province_id: Int
+    unit_id: Int
+    user_id: Int
+    vehicle_model_id: Int
+    insurance_company_id: Int
+    generated_vehicle_no:String
+    plate_number: String
+    purchase_year: String
+    is_access_card: Int
+    is_car_sticker: Int
+    policy_no: String
+    roadtax_expiry_date: Date
+    insurance_expiry_date: Date
+    image_url: String
+    image_roadtax_url: String
+    province: ThailandProvince! @belongsTo
+    user: User! @belongsTo
+    unit: Unit! @belongsTo
+    vehicleModel: VehicleModel @belongsTo
+    insuranceCompany: Company @belongsTo
+}
+
+extend type Query {
+    vehicle(
+        id:ID! @eq
+    ): Vehicle @find
+
+    vehicles(
+        id: ID @eq
+        unit_id: Int @eq
+        user_id: Int @eq
+        vehicle_model_id: Int @eq
+        plate_number: String @where(operator: "like")
+        purchase_year: String @eq
+        policy_no:String @eq
+        is_access_card: Int @eq
+        is_car_sticker: Int @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Vehicle]! @all(defaultCount: 10)
+
+    paginatedVehicles(
+        page: Int!
+        where: _ @whereConditions(columns: ["plate_number", "purchase_year", "province_id"])
+        is_access_card: Int @eq
+        is_car_sticker: Int @eq
+        hasVehicleModel: _ @whereHasConditions(columns: ["vehicleModel", "brand_id", "name", "type"])
+        hasInsuranceCompany: _ @whereHasConditions(columns: ["insuranceCompany", "name"])
+        hasUnit: _ @whereHasConditions(columns: ["unit", "unit_number", "name", "residence_id", "sgoc_company_id", "id"])
+        hasUser: _ @whereHasConditions(columns: ["user", "name"])
+    ): [Vehicle!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

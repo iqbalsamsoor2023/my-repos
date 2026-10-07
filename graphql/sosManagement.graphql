@@ -1,0 +1,39 @@
+type SosManagement {
+    id: ID!
+    created_by_id: Int!
+    unit_id: Int!
+    accepted_by_id: Int
+    user_action_request: String
+    latitude: String
+    longitude: String
+    status: String
+    remark: String
+    created_at: DateTime
+    updated_at: DateTime
+    unit: Unit @belongsTo
+    createdBy: User @belongsTo
+}
+
+extend type Query {
+    sosManagement (
+        id: Int @eq
+    ): SosManagement @find
+
+    sosManagements(
+        created_by_id: Int @eq
+        unit_id: Int @eq
+    ): [SosManagement]! @all(defaultCount: 10)
+
+    paginatedSosManagements(
+        page: Int!
+        created_by_id: Int @eq
+        unit_id: Int @eq
+        status: String @eq
+        remark: String @where(operator: "like")
+        where: _ @whereConditions(columns: ["user_action_request", "accepted_by_id"])
+        hasUnit: _ @whereHasConditions(columns: ["unit", "unit_number", "name", "sgoc_company_id", "residence_id", "id"])
+        hasCreatedBy: _ @whereHasConditions(columns: ["user", "name"])
+        created_at: DateRange @whereBetween
+        orderBy: [OrderByClause!] @orderBy
+    ): [SosManagement!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

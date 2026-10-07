@@ -1,0 +1,10 @@
+type SgocCompany {
+    id: ID!
+    name: String
+    name_th: String
+    province_id: Int
+    contact_number: String
+    person_in_charges: JSON
+    created_at: DateTime
+    users: [SgocUser] @hasMany
+}

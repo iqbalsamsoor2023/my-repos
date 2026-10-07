@@ -1,0 +1,44 @@
+type Company {
+    id: ID!,
+    province_id: Int,
+    user_id: Int,
+    type: String,
+    name: String,
+    name_th: String,
+    contact_email: String,
+    contact_number: String,
+    address: String,
+    person_in_charges: JSON,
+    website_url: String,
+    image_url: String,
+    created_at: DateTime,
+    updated_at: DateTime,
+    deleted_at: DateTime,
+    province: ThailandProvince @belongsTo,
+    user: User @belongsTo,
+}
+
+extend type Query {
+    company(
+        id: ID! @eq
+    ): Company @find
+
+    companies(
+        province_id: Int @eq
+        user_id: Int @eq
+        type: String @eq
+        name: String @eq
+        name_th: String @eq
+        contact_email: String @eq
+        contact_number: String @eq
+        address: String @eq
+        person_in_charge: String @eq
+    ): [Company] @all(defaultCount: 10)
+
+    paginatedCompanies(
+        page: Int!
+        type: String @eq
+        name: String @where(operator: "like")
+        contact_email: String @where(operator: "like")
+    ): [Company!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

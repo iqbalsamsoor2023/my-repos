@@ -1,0 +1,61 @@
+type Notification {
+    id: String!
+    type: String!
+    notifiable_type: String!
+    notifiable_id: Int!
+    data: JSON
+    read_at: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type UnreadNotification {
+    total_unread_notification: Int
+    announcement: Int
+    event: Int
+    announcement_event: Int
+    announcement_event_developer: Int
+    maintenance: Int
+    maintenance_pm: Int
+    parcel: Int
+    not_my_parcel: Int
+    visitor_record: Int
+    support_ticket: Int
+    support_ticket_pm: Int
+}
+extend type Query {
+    unreadNotifications(
+        notifiable_id: Int!
+        unit_id: Int = null
+    ):UnreadNotification @field(resolver: "Notifications")
+
+    notifications (
+        notifiable_id: Int @eq
+        notifiable_type: String @eq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Notification] @paginate(type: PAGINATOR, defaultCount: 10)
+
+    paginatedNotifications(
+        page: Int
+        notifiable_id: Int @eq
+        type: String @neq
+        orderBy: [OrderByClause!] @orderBy
+    ): [Notification] @paginate(type: PAGINATOR, defaultCount: 10)
+
+    paginatedNotificationsCount(
+        page: Int
+        notifiable_id: Int @eq
+        read_at: String @eq
+    ): [Notification] @all
+
+    paginatedUnreadNotifications(
+        page: Int
+        notifiable_id: Int @eq
+        read_at: String @eq
+    ): [Notification] @all
+
+    announcementNotifications(
+        notifiable_id: Int @eq
+        where: _ @whereConditions(columns: ["type", "read_at"])
+    ): [Notification] @all(defaultCount: 10)
+}

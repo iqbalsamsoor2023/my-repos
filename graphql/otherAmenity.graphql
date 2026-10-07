@@ -1,0 +1,22 @@
+type OtherAmenity {
+    id: ID!
+    residence_id: Int
+    is_other_amenity: Int
+    remark: String
+    warranty_handbook_url: String
+    created_at: DateTime
+    updated_at: DateTime
+    residence: Residence @belongsTo
+}
+
+extend type Query {
+    otherAmenity (
+        id: Int @eq
+        residence_id: Int @eq
+    ): OtherAmenity @find
+
+    paginatedOtherAmenities(
+        page: Int!
+        residence_id: Int @eq
+    ): [OtherAmenity!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}

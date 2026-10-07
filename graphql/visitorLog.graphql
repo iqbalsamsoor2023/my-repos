@@ -1,0 +1,79 @@
+type VisitorLog {
+    id: ID!
+    visitor_id: Int!
+    visitor_card_id: Int
+    visitor_purpose: String
+    visitor_code: String
+    visitor_generated_no: String
+    company_name: String
+    arrival_type: Int
+    vehicle_type: Int
+    vehicle_plate_no: String
+    arrival_time: DateTime
+    leave_time: DateTime
+    temperature: String
+    passenger_count: Int
+    remark: String
+    blacklist_remark: String
+    is_allowed: Int
+    qr_code_url: String
+    esign_image_url: String
+    is_pre_register: Int
+    estamp_status: String
+    is_pre_register: Int
+    vehicle_info: String
+    status: String
+    created_at: DateTime
+    updated_at: DateTime
+    deleted_at: DateTime
+    visitor: Visitor @belongsTo
+    visitorCard: VisitorCard @belongsTo
+    visitingArrangements: [VisitingArrangement!]! @hasMany
+    preregisterVisitor: PreregisterVisitor @belongsTo
+    visitorParking: VisitorParking @hasOne
+}
+
+input DateRange {
+  from: Date
+  to: Date
+}
+
+extend type Query {
+    visitorLog(
+        id:ID @eq
+        visitor_id:Int @eq
+        visitor_card_id: Int @eq
+    ): VisitorLog @find
+
+
+    visitorLogs(
+        hasVisitingArrangements: _ @whereHasConditions(columns: ["unit_id"])
+        hasVisitor: _ @whereHasConditions(columns: ["visitor", "name"])
+        vehicle_plate_no: String @where(operator: "like")
+        created_at: DateRange @whereBetween
+        visitor_id: Int @eq
+    ): [VisitorLog] @all (paginate:10)
+
+    paginatedVisitorLogs(
+        page: Int
+        id: Int @eq
+        visitor_id: Int @eq
+        visitor_card_id: Int @eq
+        arrival_type: Int @eq
+        vehicle_plate_no: String @where(operator: "like")
+        visitor_purpose: String @where(operator: "like")
+        company_name: String @where(operator: "like")
+        visitor_generated_no: String @where(operator: "like")
+        vehicle_type: Int @eq
+        where: _ @whereConditions(columns: ["leave_time", "arrival_time"])
+        is_pre_register: Int @eq
+        leave_time: String @neq
+        arrival_time: String @neq
+        hasVisitingArrangements: _ @whereHasConditions(columns: ["residence_id", "name", "unit_id", "unit_number", "sgoc_company_id", "id"])
+        hasVisitor: _ @whereHasConditions(columns: ["visitor", "name", "vehicle_plate_no"])
+        hasPreregisterVisitor: _ @whereHasConditions(columns: ["preregisterVisitor", "is_multiple_entry"])
+        created_at: DateRange @whereBetween
+        visitor_code: String @eq
+        orderBy: [OrderByClause] @orderBy
+    ): [VisitorLog!]! @paginate(type: PAGINATOR, defaultCount: 10)
+}
